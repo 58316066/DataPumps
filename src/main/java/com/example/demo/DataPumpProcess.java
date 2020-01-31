@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.errcode.ErrorCode;
 import com.github.javafaker.Faker;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import static com.example.demo.DataPumpMain.prop;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -45,6 +44,8 @@ public class DataPumpProcess {
     private int random = 0;
     private boolean check = false;
     int length_row_number = 0;
+    private boolean statusDupFile = false;
+    public static List<String> listDataFileOriginal;
 
 
     public DataPumpProcess(String field_name, String row_num, int row_number, String dtp_file_name) {
@@ -58,7 +59,7 @@ public class DataPumpProcess {
         log.info(String.valueOf(field_name));
         log.info(String.valueOf(row_num));
 
-        String path_fileConfig = prop.getProperty("part.data_pump_config");
+        String path_fileConfig = prop.getProperty("part.data_pump_fileConfig");
         File fileConfigFormat = new File(path_fileConfig);
 
         boolean checkFile = fileConfigFormat.isFile();
@@ -66,27 +67,48 @@ public class DataPumpProcess {
         log.info("CheckFile = " + checkFile);
         if (checkFile) {
             getFormat_Row(path_fileConfig);
+            checkFileDuplicate();
+            new DataPumpWriter().Writer(listDataPump, statusDupFile); // send data to writer
+        } else {
+            ErrorCode.toValidate("E1001", "!!! Cannot find configuration file !!!");
+        }
+
+    }
+
+    private void checkFileDuplicate() throws IOException {
+        BufferedReader bufferedReader = null;
+
+        String pathFileOriginal = prop.getProperty("part.OutputCSV") + dtp_file_name + ".csv";
+        statusDupFile = new File(pathFileOriginal).isFile();
+
+        if (statusDupFile) {
+            // read csv file
+            listDataFileOriginal = new ArrayList<String>();
+            File originalFile = new File(pathFileOriginal); //read output file
+
+            try {
+                bufferedReader = new BufferedReader(new FileReader(originalFile));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String readLine = "";
+            while ((readLine = bufferedReader.readLine()) != null) {
+                listDataFileOriginal.add(readLine);
+            }
+
+//            log.info("listDataFileOriginal size = " + listDataFileOriginal.size());
+//            log.info("listDataFileOriginal data = " + listDataFileOriginal);
         }
     }
 
     private void getFormat_Row(String path_fileConfig) throws IOException, NoSuchAlgorithmException {
         FileInputStream inputStream = null;
-
-        try {
-            inputStream = new FileInputStream(path_fileConfig);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-
         XSSFWorkbook workbook = null;
-        try {
-            assert inputStream != null;
-            workbook = new XSSFWorkbook(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        assert workbook != null;
+
+        inputStream = new FileInputStream(path_fileConfig);
+        workbook = new XSSFWorkbook(inputStream);
+
         XSSFSheet sheet = workbook.getSheetAt(0); // sheet Config_format
         System.out.println("Get Sheet Name ==> " + sheet.getSheetName());
 
@@ -118,6 +140,7 @@ public class DataPumpProcess {
         log.info("field_arg_name = " + field_arg_name.size());
 
         listDataPump.add(field_arg_name);
+        log.info("listDataPump = " + listDataPump);
 
         count = new int[4];
         for (int loop = 0; loop < row_number; loop++) {
@@ -131,7 +154,7 @@ public class DataPumpProcess {
                         String field_format = field_config_formats.get(j); // f = field_formats
                         if (field_format.toUpperCase().contains("SSSS")) {
                             countUp();
-                            String format1 = ("" + count[3] + count[2] + count[1] + count[0]);
+                            String format1 = ("AB" + count[3] + count[2] + count[1] + count[0]);
                             log.info(format1);
                             createLine.add(format1);
                         } else if (field_format.toUpperCase().contains("NNNNNN")) {
@@ -204,8 +227,10 @@ public class DataPumpProcess {
                 }
             }
             listDataPump.add(createLine);
+            log.info("listDataPump = " + listDataPump);
         }
-        new DataPumpWriter().Writer(listDataPump);
+
+
     }
 
     private void countUp() {

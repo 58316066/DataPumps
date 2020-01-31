@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.example.demo.DataPumpMain.prop;
+
 @Slf4j
 public class ErrorCode {
 
@@ -63,6 +65,13 @@ public class ErrorCode {
                         log.error("JobName DataPump to nested command line arguments [--JobName] [--field_name] [--row_num] [--file_name] ");
                         log.error(" Please try use command line follow as by below.");
                         log.error("$mvn spring-boot:run -Dspring-boot.run.arguments=\"--JobName=datapump\",\"--field_name=Empoyee_No/Empoyee_Name/FirstName/LastName/JobGrade/Contract_Type/Birthday/Status/Sex/Age/Update_DT/Create_DT\",\"--row_num=1000\",\"--file_name=employee\"");
+
+                        AppTerminate();
+                        break;
+                    case "E1001":
+                        log.error(msg);
+                        log.error("Make sure That you have created a configuration file in part " + prop.getProperty("part.data_pump_fileConfig"));
+                        log.error("Please try again...");
 
                         AppTerminate();
                         break;

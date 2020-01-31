@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -36,6 +37,7 @@ public class DataPumpMain {
     public static List<String> row_num;
     public static int row_number;
     public static String dtp_file_name;
+    public static boolean isFileNameDuplicate = false;
 
     @Autowired
     public DataPumpMain(Environment env, ApplicationArguments args) {
@@ -69,9 +71,24 @@ public class DataPumpMain {
                 row_num = args.getOptionValues("row_num");
                 row_number = Integer.parseInt(row_num.get(0));
                 dtp_file_name = args.getOptionValues("file_name").get(0);
+
+//                checkDuplicateFile(dtp_file_name);
             }
         }
     }
+//
+//    private void checkDuplicateFile(String dtp_file_name) {
+//        String oldFile = prop.getProperty("part.OutputCSV") + dtp_file_name;
+//        String oldFileName = "";
+//        File file = new File(oldFile);
+//        if (file.isFile()) {
+//            oldFileName = file.getName();
+//            System.out.println("oldFileName = " + oldFileName);
+//        }
+//
+//
+//        String ReadyFileName = dtp_file_name;
+//    }
 
     @Bean
     public void get_Properties() {
@@ -89,10 +106,6 @@ public class DataPumpMain {
 
     @Bean
     public void processerss() throws IOException, NoSuchAlgorithmException {
-        field_name = args.getOptionValues("field_name");
-        row_num = args.getOptionValues("row_num");
-        row_number = Integer.parseInt(row_num.get(0));
-        dtp_file_name = args.getOptionValues("file_name").get(0);
         DataPumpProcess dataPumpProcess = new DataPumpProcess(field_name.get(0), row_num.get(0), row_number, dtp_file_name);
         dataPumpProcess.setupConfig();
     }

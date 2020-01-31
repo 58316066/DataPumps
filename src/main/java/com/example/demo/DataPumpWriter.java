@@ -3,19 +3,21 @@ package com.example.demo;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.demo.DataPumpMain.*;
 import static com.example.demo.DataPumpProcess.field_arg_name;
+import static com.example.demo.DataPumpProcess.listDataFileOriginal;
 
 public class DataPumpWriter {
     private boolean writeHeader = false;
 
-    public void Writer(List<List<String>> item) throws NoSuchAlgorithmException, IOException {
+    public void Writer(List<List<String>> item, boolean statusDupFile) throws NoSuchAlgorithmException, IOException {
         int average = field_arg_name.size() / 2;
         PrintWriter p = null;
         String partFile = prop.getProperty("part.OutputCSV");
-        String fileName = dtp_file_name;
+        String fileName = dtp_file_name + "_19990101" + new Date().getTime();
 
         try {
             p = new PrintWriter(new FileWriter(partFile + fileName + ".csv", false));
@@ -70,9 +72,18 @@ public class DataPumpWriter {
             /** End write Data_Null and Data Blank
              Continue for original loop */
         }
+
+        if (statusDupFile) {
+            writeFileOriginal(p);
+        }
+
         if (p != null) {
             p.close();
         }
+        createFileControl(partFile, fileName);
+    }
+
+    private void createFileControl(String partFile, String fileName) throws NoSuchAlgorithmException, IOException {
 
         //Create checksum for this file
         File file = new File(partFile + fileName + ".csv");
@@ -87,10 +98,11 @@ public class DataPumpWriter {
         //see checksum
         System.out.println(checksum);
 
+
         String scriptControl = "- Control: \n" +
                 "    filename: " + fileName + ".csv\n" +
                 "    md5sum: " + checksum + "\n" +
-                "    line: " + (field_arg_name.size() * 2 + row_number + 5) + "\n";
+                "    line: " + getLastRowNum(partFile, fileName) + "\n";
 
         File fileControl = new File(partFile + fileName + ".control");
 
@@ -100,6 +112,29 @@ public class DataPumpWriter {
         writer.close();
         System.out.println("Write fileControl Success!");
         System.out.println(fileControl.getPath());
+    }
+
+    private int getLastRowNum(String partFile, String fileName) throws IOException {
+        int lastRowNum = 0;
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(partFile + fileName + ".csv"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        while ((bufferedReader.readLine()) != null) {
+            lastRowNum++;
+        }
+        return lastRowNum;
+    }
+
+
+    private void writeFileOriginal(PrintWriter p) {
+        listDataFileOriginal.remove(0);
+        for (String data : listDataFileOriginal) {
+            p.println(data);
+        }
     }
 
     int fieldSize = field_arg_name.size();
