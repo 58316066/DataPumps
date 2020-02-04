@@ -38,6 +38,8 @@ public class DataPumpProcess {
     public static List<List<String>> listDataPump = new ArrayList<>();
     private int[] count;
     public static int counter;
+    public static int time_fig;
+    public static int datetime;
     //    private String firstName;
 //    private String lastName;
 //    private String days;
@@ -114,7 +116,7 @@ public class DataPumpProcess {
         XSSFCellStyle dateCellStyle = workbook.createCellStyle();
         dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
 
-        int lastRowNum = sheet.getLastRowNum() - 3;
+        int lastRowNum = sheet.getLastRowNum();
 
         log.info("lastRowNum = " + lastRowNum);
         for (int i = 1; i <= lastRowNum; i++) {
@@ -136,7 +138,6 @@ public class DataPumpProcess {
         field_arg_name.addAll(Arrays.asList(tokens));
 
         log.info("field_arg_name = " + field_arg_name);
-        log.info("field_arg_name = " + field_arg_name.size());
 
         listDataPump.add(field_arg_name);
     }
@@ -156,11 +157,11 @@ public class DataPumpProcess {
                         /** DataPumping process running...
                          Data that has been return will add to arrayList createLine[]; **/
                         createLine.add(dataPumping.pumping(field_format, random));
-
                     }
                 }
                 if (!check) {
-                    log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1) + "create format ==> " + field_config_formats.get(field_config_name.size() - 1));
+
+                    log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1) + " create format ==> " + field_config_formats.get(field_config_name.size() - 1));
                     String formatDefault = "DDDD";
                     log.info(formatDefault);
                     createLine.add(formatDefault);
