@@ -150,21 +150,21 @@ public class DataPumpProcess {
                     if (field_argument.contains(field_config_name.get(j))) {
                         check = true;
                         String field_format = field_config_formats.get(j); // f = field_formats
-                        if (field_format.toUpperCase().contains("SSSS")) {
+                        if (field_format.toUpperCase().contains("AB0001")) {
                             countUp();
                             String format1 = ("AB" + count[3] + count[2] + count[1] + count[0]);
                             log.info(format1);
                             createLine.add(format1);
-                        } else if (field_format.toUpperCase().contains("NNNNNN")) {
+                        } else if (field_format.toUpperCase().contains("FFFF LLLL")) {
                             randomIdentifier();
                             String format2 = (firstName + " " + lastName);
                             log.info(format2);
                             createLine.add(format2);
-                        } else if (field_format.toUpperCase().contains("FFFFFFFF")) {
+                        } else if (field_format.toUpperCase().contains("FFFF")) {
                             String format3 = (firstName);
                             log.info(format3);
                             createLine.add(format3);
-                        } else if (field_format.toUpperCase().contains("LLLLLL")) {
+                        } else if (field_format.toUpperCase().contains("LLLL")) {
                             String format4 = (lastName);
                             log.info(format4);
                             createLine.add(format4);
@@ -172,7 +172,7 @@ public class DataPumpProcess {
                             String format5 = (String.valueOf(RandomNumber(10, 20)));
                             log.info(format5);
                             createLine.add(format5);
-                        } else if (field_format.toUpperCase().contains("CC")) {
+                        } else if (field_format.toUpperCase().contains("C|P")) {
                             String format6 = (randomChar());
                             log.info(format6);
                             createLine.add(format6);
@@ -211,7 +211,7 @@ public class DataPumpProcess {
                             createLine.add(format10);
                         } else {
                             log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1) + "create format ==> " + field_config_formats.get(field_config_name.size() - 1));
-                            String formatDefault = "DDDDDDDD";
+                            String formatDefault = "DDDD";
                             log.info(formatDefault);
                             createLine.add(formatDefault);
                         }
@@ -219,7 +219,7 @@ public class DataPumpProcess {
                 }
                 if (!check) {
                     log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1) + "create format ==> " + field_config_formats.get(field_config_name.size() - 1));
-                    String formatDefault = "DDDDDDDD";
+                    String formatDefault = "DDDD";
                     log.info(formatDefault);
                     createLine.add(formatDefault);
                 }
