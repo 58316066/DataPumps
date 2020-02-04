@@ -71,24 +71,9 @@ public class DataPumpMain {
                 row_num = args.getOptionValues("row_num");
                 row_number = Integer.parseInt(row_num.get(0));
                 dtp_file_name = args.getOptionValues("file_name").get(0);
-
-//                checkDuplicateFile(dtp_file_name);
             }
         }
     }
-//
-//    private void checkDuplicateFile(String dtp_file_name) {
-//        String oldFile = prop.getProperty("part.OutputCSV") + dtp_file_name;
-//        String oldFileName = "";
-//        File file = new File(oldFile);
-//        if (file.isFile()) {
-//            oldFileName = file.getName();
-//            System.out.println("oldFileName = " + oldFileName);
-//        }
-//
-//
-//        String ReadyFileName = dtp_file_name;
-//    }
 
     @Bean
     public void get_Properties() {
