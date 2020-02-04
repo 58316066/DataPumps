@@ -95,9 +95,6 @@ public class DataPumpProcess {
             while ((readLine = bufferedReader.readLine()) != null) {
                 listDataFileOriginal.add(readLine);
             }
-
-//            log.info("listDataFileOriginal size = " + listDataFileOriginal.size());
-//            log.info("listDataFileOriginal data = " + listDataFileOriginal);
         }
     }
 
@@ -109,7 +106,8 @@ public class DataPumpProcess {
         inputStream = new FileInputStream(path_fileConfig);
         workbook = new XSSFWorkbook(inputStream);
 
-        XSSFSheet sheet = workbook.getSheetAt(0); // sheet Config_format
+        int indexSheet = Integer.parseInt(prop.getProperty("fileConfig.indexSheet")); // get indexSheet
+        XSSFSheet sheet = workbook.getSheetAt(indexSheet);
         System.out.println("Get Sheet Name ==> " + sheet.getSheetName());
 
         CreationHelper createHelper = workbook.getCreationHelper();
