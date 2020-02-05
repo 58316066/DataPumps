@@ -38,6 +38,8 @@ public class DataPumpMain {
     public static int row_number;
     public static String dtp_file_name;
     public static boolean isFileNameDuplicate = false;
+    public static boolean isEmployee_work_schedule = false;
+    public static int inIsEmployee = 0;
 
     @Autowired
     public DataPumpMain(Environment env, ApplicationArguments args) {
@@ -71,6 +73,9 @@ public class DataPumpMain {
                 row_num = args.getOptionValues("row_num");
                 row_number = Integer.parseInt(row_num.get(0));
                 dtp_file_name = args.getOptionValues("file_name").get(0);
+                if (dtp_file_name.contains("employee_work_schedule")) {
+                    isEmployee_work_schedule = true;
+                }
             }
         }
     }

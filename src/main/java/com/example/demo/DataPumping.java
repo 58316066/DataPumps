@@ -2,24 +2,19 @@ package com.example.demo;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.example.demo.DataPumpProcess.counter;
-import static com.example.demo.DataPumpProcess.time_fig;
-import static com.example.demo.DataPumpProcess.datetime;
+import static com.example.demo.DataPumpMain.*;
+import static com.example.demo.DataPumpProcess.*;
 
 @Slf4j
 public class DataPumping {
 
-    private int[] count = new int[4];
+
     private String firstName;
     private String lastName;
     private String days;
@@ -99,10 +94,28 @@ public class DataPumping {
     // for น้องๆฝึกงาน
     public String pumping(String field_format, int random) {
         if (field_format.toUpperCase().contains("EM0001")) {
-            countUp();
-            String format1 = ("EM" + count[3] + count[2] + count[1] + count[0]);
-            log.info(format1);
-            return format1;
+            if (isEmployee_work_schedule) {
+                String format1 = "";
+                if (inIsEmployee == 0) {
+                    countUp2();
+                    inIsEmployee++;
+                }
+                if (inIsEmployee == 4) {
+                    inIsEmployee = 1;
+                    countUp2();
+                }
+                if (inIsEmployee != 0) {
+                    format1 = ("EM" + count2[3] + count2[2] + count2[1] + count2[0]);
+                    log.info(format1);
+                    inIsEmployee++;
+                }
+                return format1;
+            } else {
+                countUp();
+                String format1 = ("EM" + count[3] + count[2] + count[1] + count[0]);
+                log.info(format1);
+                return format1;
+            }
         } else if (field_format.toUpperCase().contains("FFFF LLLL")) {
             randomIdentifier();
             String format2 = (firstName + " " + lastName);
@@ -177,39 +190,38 @@ public class DataPumping {
             String format7 = (days);
             log.info(format7);
             return format7;
-        } else if (field_format.toUpperCase().contains("HH:MM:SS")) {
+        } else if (field_format.toUpperCase().contains("TIME")) {
             time_fig++;
-            String time = "00:00:00";
-            if (time_fig <= 6) {
-                switch (time_fig) {
-                    case 1:
-                        time = "07:00:00";
-                        break;
-                    case 2:
-                        time = "15:00:00";
-                        break;
-                    case 3:
-                        time = "15:00:00";
-                        break;
-                    case 4:
-                        time = "23:00:00";
-                        break;
-                    case 5:
-                        time = "23:00:00";
-                        break;
-                    case 6:
-                        time = "07:00:00";
-                        break;
-                    default:
-                        time = time;
-                        break;
-                }
-                String format7 = (time);
-                log.info(format7);
-                return format7;
-            } else {
+            if (time_fig > 6) {
                 time_fig = 0;
             }
+            String time = "00:00:00";
+            switch (time_fig) {
+                case 1:
+                    time = "07:00:00";
+                    break;
+                case 2:
+                    time = "15:00:00";
+                    break;
+                case 3:
+                    time = "15:00:00";
+                    break;
+                case 4:
+                    time = "23:00:00";
+                    break;
+                case 5:
+                    time = "23:00:00";
+                    break;
+                case 6:
+                    time = "07:00:00";
+                    break;
+                default:
+                    time = time;
+                    break;
+            }
+            String format7 = (time);
+            log.info(format7);
+            return format7;
         } else if (field_format.contains("Single|Marry")) {
             String[] split = field_format.split("\\|");
             String format8 = (split[radgrt(split.length)]);
@@ -235,12 +247,28 @@ public class DataPumping {
             log.info(format1);
             return format1;
         } else if (field_format.contains("M|E|N")) {
-            String[] split = field_format.split("\\|");
-            log.info("sss.length = " + split.length);
-            String format9 = (split[radgrt(split.length)]);
-            log.info(format9);
-            return format9;
-        } else if (field_format.contains("Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday")) {
+            switch (rowNum) {
+                case 1:
+                    return "N";
+                case 2:
+                    return "E";
+                case 3:
+                    return "M";
+                default:
+                    return "Unknown";
+            }
+        } else if (field_format.contains("Morning|Evening|Night")) {
+            switch (rowNum) {
+                case 1:
+                    return "Night";
+                case 2:
+                    return "Evening";
+                case 3:
+                    return "Morning";
+                default:
+                    return "Unknown";
+            }
+        } else if (field_format.contains("Monday")) {
             String[] split = field_format.split("\\|");
             String format9 = (split[radgrt(split.length)]);
             log.info(format9);
@@ -248,13 +276,25 @@ public class DataPumping {
         } else if (field_format.toUpperCase().contains("DETAIL")) {
             log.info("Detail");
             return "Detail";
+        } else if (field_format.contains("S|P|V")) {
+            String[] split = field_format.split("\\|");
+            String format9 = (split[radgrt(split.length)]);
+            log.info(format9);
+            return format9;
         } else {
             log.info("matching NO , Default ==> \"DDDD\"");
             String formatDefault = "DDDD";
             log.info(formatDefault);
             return formatDefault;
         }
-        return "DDDD";
+    }
+
+    private void countUp2() {
+        counter2++;
+        count2[0] = counter2 % 10;
+        count2[1] = counter2 / 10 % 10;
+        count2[2] = counter2 / 100 % 10;
+        count2[3] = counter2 / 1000 % 10;
     }
 
     private void countUp() {
@@ -301,19 +341,6 @@ public class DataPumping {
         log.warn("date_times = " + date_times);
 
         return date_times;
-
-//        LocalDateTime startDateTime = LocalDateTime.of(fYear, fMonth, fDay, fHour, fMinute);
-//        LocalDateTime endDateTime = LocalDateTime.of(lYear, lMonth, lDay, lHour, lMinute);
-//
-//
-//        long start = startDateTime.toEpochSecond();
-//
-//        LocalDate endDate = LocalDate.of(lastYear, lastMonth, lastDay); //end date
-//        long end = endDate.toEpochDay();
-//
-//        long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
-//        LocalDateTime.of
-//        return String.valueOf(LocalDate.ofEpochDay(randomEpochDay));
     }
 
     private String randomDates(int firstYear, int lastYear, int lastMonth, int lastDay) {

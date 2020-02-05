@@ -12,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import static com.example.demo.DataPumpMain.prop;
+import static com.example.demo.DataPumpMain.row_number;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -36,10 +37,12 @@ public class DataPumpProcess {
 
     private List<String> createLine;
     public static List<List<String>> listDataPump = new ArrayList<>();
-    private int[] count;
+//    private int[] count;
     public static int counter;
+    public static int counter2;
     public static int time_fig;
     public static int datetime;
+    public static boolean aBoolean = false;
     //    private String firstName;
 //    private String lastName;
 //    private String days;
@@ -48,7 +51,10 @@ public class DataPumpProcess {
     int length_row_number = 0;
     private boolean statusDupFile = false;
     public static List<String> listDataFileOriginal;
-
+    public static int indexOfField;
+    public static int rowNum;
+    public static int[] count = new int[4];
+    public static int[] count2 = new int[4];
 
     public DataPumpProcess(String field_name, String row_num, int row_number, String dtp_file_name) {
         this.field_name = field_name;
@@ -143,12 +149,16 @@ public class DataPumpProcess {
     }
 
     private void GenerateData() {
+        rowNum = row_number + 1; //4
         for (int loop = 0; loop < row_number; loop++) {
+            rowNum--;
             DataPumping dataPumping = new DataPumping();
             random = 0;
             createLine = new ArrayList<>();
+            aBoolean = false;
             for (String field_argument : field_arg_name) {
                 check = false;
+
                 for (int j = 0; j < field_config_name.size(); j++) {
                     if (field_argument.contains(field_config_name.get(j))) {
                         check = true;
