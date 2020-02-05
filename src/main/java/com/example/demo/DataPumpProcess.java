@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.errcode.ErrorCode;
-import com.github.javafaker.Faker;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -12,16 +11,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import static com.example.demo.DataPumpMain.prop;
-import static com.example.demo.DataPumpMain.row_number;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Data
 @Slf4j
@@ -56,7 +51,8 @@ public class DataPumpProcess {
     public static int[] count = new int[4];
     public static int[] count2 = new int[4];
 
-    public DataPumpProcess(String field_name, String row_num, int row_number, String dtp_file_name) {
+    public DataPumpProcess(final String field_name, final String row_num, final int row_number,
+            final String dtp_file_name) {
         this.field_name = field_name;
         this.row_num = row_num;
         this.row_number = row_number;
@@ -67,10 +63,10 @@ public class DataPumpProcess {
         log.info(String.valueOf(field_name));
         log.info(String.valueOf(row_num));
 
-        String path_fileConfig = prop.getProperty("part.data_pump_fileConfig");
-        File fileConfigFormat = new File(path_fileConfig);
+        final String path_fileConfig = prop.getProperty("part.data_pump_fileConfig");
+        final File fileConfigFormat = new File(path_fileConfig);
 
-        boolean checkFile = fileConfigFormat.isFile();
+        final boolean checkFile = fileConfigFormat.isFile();
 
         log.info("CheckFile = " + checkFile);
         if (checkFile) {
@@ -87,17 +83,17 @@ public class DataPumpProcess {
     private void checkFileDuplicate() throws IOException {
         BufferedReader bufferedReader = null;
 
-        String pathFileOriginal = prop.getProperty("part.OutputCSV") + dtp_file_name + ".csv";
+        final String pathFileOriginal = prop.getProperty("part.OutputCSV") + dtp_file_name + ".csv";
         statusDupFile = new File(pathFileOriginal).isFile();
 
         if (statusDupFile) {
             // read csv file
             listDataFileOriginal = new ArrayList<String>();
-            File originalFile = new File(pathFileOriginal); //read output file
+            final File originalFile = new File(pathFileOriginal); // read output file
 
             try {
                 bufferedReader = new BufferedReader(new FileReader(originalFile));
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 e.printStackTrace();
             }
             String readLine = "";
@@ -107,29 +103,30 @@ public class DataPumpProcess {
         }
     }
 
-    private void getFormat_Row(String path_fileConfig) throws IOException, NoSuchAlgorithmException {
+    private void getFormat_Row(final String path_fileConfig) throws IOException, NoSuchAlgorithmException {
         FileInputStream inputStream = null;
         XSSFWorkbook workbook = null;
 
         inputStream = new FileInputStream(path_fileConfig);
         workbook = new XSSFWorkbook(inputStream);
+     
 
-        int indexSheet = Integer.parseInt(prop.getProperty("fileConfig.indexSheet")); // get indexSheet
-        XSSFSheet sheet = workbook.getSheetAt(indexSheet);
+        final int indexSheet = Integer.parseInt(prop.getProperty("fileConfig.indexSheet")); // get indexSheet
+        final XSSFSheet sheet = workbook.getSheetAt(indexSheet);
         System.out.println("Get Sheet Name ==> " + sheet.getSheetName());
 
-        CreationHelper createHelper = workbook.getCreationHelper();
-        XSSFCellStyle dateCellStyle = workbook.createCellStyle();
+        final CreationHelper createHelper = workbook.getCreationHelper();
+        final XSSFCellStyle dateCellStyle = workbook.createCellStyle();
         dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd"));
 
-        int lastRowNum = sheet.getLastRowNum();
+        final int lastRowNum = sheet.getLastRowNum();
 
         log.info("lastRowNum = " + lastRowNum);
         for (int i = 1; i <= lastRowNum; i++) {
-            Row row = sheet.getRow(i);
+            final Row row = sheet.getRow(i);
 
-            Cell cellFieldName = row.getCell(1);
-            Cell cellFormat = row.getCell(2);
+            final Cell cellFieldName = row.getCell(1);
+            final Cell cellFormat = row.getCell(2);
             log.info("cellFieldName = \n" + cellFieldName);
             field_config_name.add(cellFieldName.getStringCellValue());
             field_config_formats.add(cellFormat.getStringCellValue());
@@ -138,41 +135,45 @@ public class DataPumpProcess {
         log.info("field_config_formats = \n" + field_config_formats);
 
         /** parse field name array split "," */
-        String field_names = field_name;
-        String[] tokens = field_names.split("/");
+        final String field_names = field_name;
+        final String[] tokens = field_names.split("/");
 
         field_arg_name.addAll(Arrays.asList(tokens));
 
         log.info("field_arg_name = " + field_arg_name);
 
         listDataPump.add(field_arg_name);
+        workbook.close();
     }
 
     private void GenerateData() {
-        rowNum = row_number + 1; //4
+        rowNum = row_number + 1; // 4
         for (int loop = 0; loop < row_number; loop++) {
             rowNum--;
-            DataPumping dataPumping = new DataPumping();
+            final DataPumping dataPumping = new DataPumping();
             random = 0;
             createLine = new ArrayList<>();
             aBoolean = false;
-            for (String field_argument : field_arg_name) {
+            for (final String field_argument : field_arg_name) {
                 check = false;
 
                 for (int j = 0; j < field_config_name.size(); j++) {
                     if (field_argument.contains(field_config_name.get(j))) {
                         check = true;
-                        String field_format = field_config_formats.get(j); // f = field_formats
+                        final String field_format = field_config_formats.get(j); // f = field_formats
 
-                        /** DataPumping process running...
-                         Data that has been return will add to arrayList createLine[]; **/
+                        /**
+                         * DataPumping process running... Data that has been return will add to
+                         * arrayList createLine[];
+                         **/
                         createLine.add(dataPumping.pumping(field_format, random));
                     }
                 }
                 if (!check) {
 
-                    log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1) + " create format ==> " + field_config_formats.get(field_config_name.size() - 1));
-                    String formatDefault = "DDDD";
+                    log.info("matching NO == > Default! " + field_config_name.get(field_config_name.size() - 1)
+                            + " create format ==> " + field_config_formats.get(field_config_name.size() - 1));
+                    final String formatDefault = "DDDD";
                     log.info(formatDefault);
                     createLine.add(formatDefault);
                 }

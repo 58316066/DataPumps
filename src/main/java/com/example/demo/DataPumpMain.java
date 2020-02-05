@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -42,7 +41,7 @@ public class DataPumpMain {
     public static int inIsEmployee = 0;
 
     @Autowired
-    public DataPumpMain(Environment env, ApplicationArguments args) {
+    public DataPumpMain(final Environment env, final ApplicationArguments args) {
         this.env = env;
         this.args = args;
     }
@@ -53,22 +52,23 @@ public class DataPumpMain {
         log.info("start initial argsComponent");
         log.info("OptionNames: {}", args.getOptionNames());
 
-        for (String name : args.getOptionNames()) {
+        for (final String name : args.getOptionNames()) {
             log.info("arg-" + name + "=" + args.getOptionValues(name));
         }
 
         if (args.containsOption("JobName")) {
-            List<String> values = args.getOptionValues("JobName");
+            final List<String> values = args.getOptionValues("JobName");
 
             this.setJobName(values.get(0));
             log.info("JobName = [" + this.getJobName() + "]");
 
             if (this.getJobName().equalsIgnoreCase("datapump")) {
 
-                if (!args.containsOption("field_name") || !args.containsOption("row_num") || !args.containsOption("file_name")) {
+                if (!args.containsOption("field_name") || !args.containsOption("row_num")
+                        || !args.containsOption("file_name")) {
                     ErrorCode.toValidate("E1000", "!!! Argument missing !!! ");
                 }
-                //Get argument values
+                // Get argument values
                 field_name = args.getOptionValues("field_name");
                 row_num = args.getOptionValues("row_num");
                 row_number = Integer.parseInt(row_num.get(0));
@@ -89,14 +89,15 @@ public class DataPumpMain {
             }
             prop.load(input);
 
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             ex.printStackTrace();
         }
     }
 
     @Bean
     public void processerss() throws IOException, NoSuchAlgorithmException {
-        DataPumpProcess dataPumpProcess = new DataPumpProcess(field_name.get(0), row_num.get(0), row_number, dtp_file_name);
+        final DataPumpProcess dataPumpProcess = new DataPumpProcess(field_name.get(0), row_num.get(0), row_number,
+                dtp_file_name);
         dataPumpProcess.setupConfig();
     }
 

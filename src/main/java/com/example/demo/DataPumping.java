@@ -92,7 +92,7 @@ public class DataPumping {
 
 
     // for น้องๆฝึกงาน
-    public String pumping(String field_format, int random) {
+    public String pumping(final String field_format, int random) {
         if (field_format.toUpperCase().contains("EM0001")) {
             if (isEmployee_work_schedule) {
                 String format1 = "";
@@ -112,30 +112,30 @@ public class DataPumping {
                 return format1;
             } else {
                 countUp();
-                String format1 = ("EM" + count[3] + count[2] + count[1] + count[0]);
+                final String format1 = ("EM" + count[3] + count[2] + count[1] + count[0]);
                 log.info(format1);
                 return format1;
             }
         } else if (field_format.toUpperCase().contains("FFFF LLLL")) {
             randomIdentifier();
-            String format2 = (firstName + " " + lastName);
+            final String format2 = (firstName + " " + lastName);
             log.info(format2);
             return format2;
         } else if (field_format.toUpperCase().contains("FFFF")) {
             randomIdentifier();
-            String format3 = (firstName);
+            final String format3 = (firstName);
             log.info(format3);
             return format3;
         } else if (field_format.toUpperCase().contains("LLLL")) {
-            String format4 = (lastName);
+            final String format4 = (lastName);
             log.info(format4);
             return format4;
         } else if (field_format.toUpperCase().contains("MMMM")) {
-            String format4 = (middleName);
+            final String format4 = (middleName);
             log.info(format4);
             return format4;
         } else if (field_format.toUpperCase().contains("C|P")) {
-            String format6 = (randomChar(field_format));
+            final String format6 = (randomChar(field_format));
             log.info(format6);
             return format6;
         } else if (field_format.toUpperCase().contains("YYYY-MM-DD HH:MM:SS")) {
@@ -168,7 +168,7 @@ public class DataPumping {
                     days = randomDateTimes(2020, 1, 1, 2020, 1, 2, 0, 0, 0, 1);
                     break;
             }
-            String format7 = (days);
+            final String format7 = (days);
             log.info(format7);
             return format7;
         } else if (field_format.toUpperCase().contains("YYYY-MM-DD")) {
@@ -187,7 +187,7 @@ public class DataPumping {
                     days = randomDates(1997, 2020, 1, 1);
                     break;
             }
-            String format7 = (days);
+            final String format7 = (days);
             log.info(format7);
             return format7;
         } else if (field_format.toUpperCase().contains("TIME")) {
@@ -215,35 +215,34 @@ public class DataPumping {
                 case 6:
                     time = "07:00:00";
                     break;
-                default:
-                    time = time;
+                default: 
                     break;
             }
-            String format7 = (time);
+            final String format7 = (time);
             log.info(format7);
             return format7;
         } else if (field_format.contains("Single|Marry")) {
-            String[] split = field_format.split("\\|");
-            String format8 = (split[radgrt(split.length)]);
+            final String[] split = field_format.split("\\|");
+            final String format8 = (split[radgrt(split.length)]);
             log.info(format8);
             return format8;
         } else if (field_format.contains("Male|Female")) {
-            String[] split = field_format.split("\\|");
-            String format9 = (split[radgrt(split.length)]);
+            final String[] split = field_format.split("\\|");
+            final String format9 = (split[radgrt(split.length)]);
             log.info(format9);
             return format9;
         } else if (field_format.toUpperCase().contains("AA")) {
-            String format10 = (String.valueOf(RandomNumber(27, 50)));
+            final String format10 = (String.valueOf(RandomNumber(27, 50)));
             log.info(format10);
             return format10;
         } else if (field_format.contains("Programmer|Tester|UX/UI|DataScience|DataEngineer")) {
-            String[] split = field_format.split("\\|");
-            String format10 = (split[radgrt(split.length)]);
+            final String[] split = field_format.split("\\|");
+            final String format10 = (split[radgrt(split.length)]);
             log.info(format10);
             return format10;
         } else if (field_format.toUpperCase().contains("WW0001")) {
             countUp();
-            String format1 = ("WW" + count[3] + count[2] + count[1] + count[0]);
+            final String format1 = ("WW" + count[3] + count[2] + count[1] + count[0]);
             log.info(format1);
             return format1;
         } else if (field_format.contains("M|E|N")) {
@@ -269,21 +268,21 @@ public class DataPumping {
                     return "Unknown";
             }
         } else if (field_format.contains("Monday")) {
-            String[] split = field_format.split("\\|");
-            String format9 = (split[radgrt(split.length)]);
+            final String[] split = field_format.split("\\|");
+            final String format9 = (split[radgrt(split.length)]);
             log.info(format9);
             return format9;
         } else if (field_format.toUpperCase().contains("DETAIL")) {
             log.info("Detail");
             return "Detail";
         } else if (field_format.contains("S|P|V")) {
-            String[] split = field_format.split("\\|");
-            String format9 = (split[radgrt(split.length)]);
+            final String[] split = field_format.split("\\|");
+            final String format9 = (split[radgrt(split.length)]);
             log.info(format9);
             return format9;
         } else {
             log.info("matching NO , Default ==> \"DDDD\"");
-            String formatDefault = "DDDD";
+            final String formatDefault = "DDDD";
             log.info(formatDefault);
             return formatDefault;
         }
@@ -306,64 +305,64 @@ public class DataPumping {
     }
 
     private void randomIdentifier() {
-        Faker faker = new Faker();
+        final Faker faker = new Faker();
         firstName = faker.name().firstName();
         middleName = faker.name().firstName();
         lastName = faker.name().lastName();
     }
 
-    private String randomChar(String field_format) {
-        String chars = field_format.replaceAll("\\|", "");
-        Random rnd = new Random();
+    private String randomChar(final String field_format) {
+        final String chars = field_format.replaceAll("\\|", "");
+        final Random rnd = new Random();
         return String.valueOf(chars.charAt(rnd.nextInt(chars.length())));
     }
 
-    private String randomDateTimes(int fYear, int fMonth, int fDay, int lYear, int lMonth, int lDay, int fHour, int fMinute, int lHour, int lMinute) {
+    private String randomDateTimes(final int fYear, final int fMonth, final int fDay, final int lYear, final int lMonth, final int lDay, final int fHour, final int fMinute, final int lHour, final int lMinute) {
         // Date
-        LocalDate startDate = LocalDate.of(fYear, fMonth, fDay); //start date
-        long start = startDate.toEpochDay();
+        final LocalDate startDate = LocalDate.of(fYear, fMonth, fDay); //start date
+        final long start = startDate.toEpochDay();
 
-        LocalDate endDate = LocalDate.of(lYear, lMonth, lDay); //end date
-        long end = endDate.toEpochDay();
-        long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+        final LocalDate endDate = LocalDate.of(lYear, lMonth, lDay); //end date
+        final long end = endDate.toEpochDay();
+        final long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
 
         // Time
-        LocalTime startTime = LocalTime.of(fHour, fMinute);
-        Long start_time = startTime.toNanoOfDay();
+        final LocalTime startTime = LocalTime.of(fHour, fMinute);
+        final Long start_time = startTime.toNanoOfDay();
 
-        LocalTime endTime = LocalTime.of(lHour, lMinute);
-        Long end_time = endTime.toNanoOfDay();
+        final LocalTime endTime = LocalTime.of(lHour, lMinute);
+        final Long end_time = endTime.toNanoOfDay();
 
-        long randomTime = ThreadLocalRandom.current().longs(start_time, end_time).findAny().getAsLong();
+        final long randomTime = ThreadLocalRandom.current().longs(start_time, end_time).findAny().getAsLong();
 
-        String date_times = LocalDate.ofEpochDay(randomEpochDay) + " " + LocalTime.ofNanoOfDay(randomTime).getHour() + ":" + LocalTime.ofNanoOfDay(randomTime).getMinute() + ":" + LocalTime.ofNanoOfDay(randomTime).getSecond();
+        final String date_times = LocalDate.ofEpochDay(randomEpochDay) + " " + LocalTime.ofNanoOfDay(randomTime).getHour() + ":" + LocalTime.ofNanoOfDay(randomTime).getMinute() + ":" + LocalTime.ofNanoOfDay(randomTime).getSecond();
 
         log.warn("date_times = " + date_times);
 
         return date_times;
     }
 
-    private String randomDates(int firstYear, int lastYear, int lastMonth, int lastDay) {
-        LocalDate startDate = LocalDate.of(firstYear, 1, 1); //start date
-        long start = startDate.toEpochDay();
+    private String randomDates(final int firstYear, final int lastYear, final int lastMonth, final int lastDay) {
+        final LocalDate startDate = LocalDate.of(firstYear, 1, 1); //start date
+        final long start = startDate.toEpochDay();
 
-        LocalDate endDate = LocalDate.of(lastYear, lastMonth, lastDay); //end date
-        long end = endDate.toEpochDay();
+        final LocalDate endDate = LocalDate.of(lastYear, lastMonth, lastDay); //end date
+        final long end = endDate.toEpochDay();
 
-        long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+        final long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
         return String.valueOf(LocalDate.ofEpochDay(randomEpochDay));
     }
 
-    private int radgrt(int num) {
+    private int radgrt(final int num) {
         return (int) Math.ceil(Math.random() * num) - 1;
     }
 
 
-    private int RandomNumber(int min, int max) {
+    private int RandomNumber(final int min, final int max) {
         if (min >= max) {
             throw new IllegalArgumentException("max must be greater than min");
         }
-        Random r = new Random();
+        final Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
     }
 
