@@ -25,7 +25,7 @@ public class DataPumpWriter {
             e.printStackTrace();
         }
 
-        /** write Data  */
+        /** write Data */
         int rows = 0;
         for (List<String> list : item) {
             rows++;
@@ -69,8 +69,9 @@ public class DataPumpWriter {
                 writeDuplicate(p);
                 writeHeader = true;
             }
-            /** End write Data_Null and Data Blank
-             Continue for original loop */
+            /**
+             * End write Data_Null and Data Blank Continue for original loop
+             */
         }
 
         if (statusDupFile) {
@@ -85,24 +86,21 @@ public class DataPumpWriter {
 
     private void createFileControl(String partFile, String fileName) throws NoSuchAlgorithmException, IOException {
 
-        //Create checksum for this file
+        // Create checksum for this file
         File file = new File(partFile + fileName + ".csv");
 
-        //Use MD5 algorithm
+        // Use MD5 algorithm
         MessageDigest md5Digest = MessageDigest.getInstance("MD5");
 
-        //Get the checksum
+        // Get the checksum
         String checksum = null;
         checksum = getFileChecksum(md5Digest, file);
 
-        //see checksum
+        // see checksum
         System.out.println(checksum);
 
-
-        String scriptControl = "- Control: \n" +
-                "    filename: " + fileName + ".csv\n" +
-                "    md5sum: " + checksum + "\n" +
-                "    line: " + getLastRowNum(partFile, fileName) + "\n";
+        String scriptControl = "- Control: \n" + "    filename: " + fileName + ".csv\n" + "    md5sum: " + checksum
+                + "\n" + "    line: " + getLastRowNum(partFile, fileName) + "\n";
 
         File fileControl = new File(partFile + fileName + ".control");
 
@@ -128,7 +126,6 @@ public class DataPumpWriter {
         }
         return lastRowNum;
     }
-
 
     private void writeFileOriginal(PrintWriter p) {
         listDataFileOriginal.remove(0);
@@ -200,31 +197,31 @@ public class DataPumpWriter {
     }
 
     private static String getFileChecksum(MessageDigest digest, File file) throws IOException {
-        //Get file input stream for reading the file content
+        // Get file input stream for reading the file content
         FileInputStream fis = new FileInputStream(file);
 
-        //Create byte array to read data in chunks
+        // Create byte array to read data in chunks
         byte[] byteArray = new byte[1024];
         int bytesCount = 0;
 
-        //Read file data and update in message digest
+        // Read file data and update in message digest
         while ((bytesCount = fis.read(byteArray)) != -1) {
             digest.update(byteArray, 0, bytesCount);
         }
 
-        //close the stream; We don't need it now.
+        // close the stream; We don't need it now.
         fis.close();
 
-        //Get the hash's bytes
+        // Get the hash's bytes
         byte[] bytes = digest.digest();
 
-        //This bytes[] has bytes in decimal format;
-        //Convert it to hexadecimal format
+        // This bytes[] has bytes in decimal format;
+        // Convert it to hexadecimal format
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
             sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
         }
-        //return complete hash
+        // return complete hash
         return sb.toString();
     }
 }

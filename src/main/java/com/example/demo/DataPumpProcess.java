@@ -32,15 +32,11 @@ public class DataPumpProcess {
 
     private List<String> createLine;
     public static List<List<String>> listDataPump = new ArrayList<>();
-//    private int[] count;
     public static int counter;
     public static int counter2;
     public static int time_fig;
     public static int datetime;
     public static boolean aBoolean = false;
-    //    private String firstName;
-//    private String lastName;
-//    private String days;
     public static int random = 0;
     private boolean check = false;
     int length_row_number = 0;
@@ -109,7 +105,6 @@ public class DataPumpProcess {
 
         inputStream = new FileInputStream(path_fileConfig);
         workbook = new XSSFWorkbook(inputStream);
-     
 
         final int indexSheet = Integer.parseInt(prop.getProperty("fileConfig.indexSheet")); // get indexSheet
         final XSSFSheet sheet = workbook.getSheetAt(indexSheet);
@@ -179,7 +174,6 @@ public class DataPumpProcess {
                 }
             }
             listDataPump.add(createLine);
-//            log.info("listDataPump = " + listDataPump);
         }
     }
 
