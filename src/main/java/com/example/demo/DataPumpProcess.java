@@ -33,10 +33,8 @@ public class DataPumpProcess {
     private List<String> createLine;
     public static List<List<String>> listDataPump = new ArrayList<>();
     public static int counter;
-    public static int counter2;
     public static int time_fig;
     public static int datetime;
-    public static boolean aBoolean = false;
     public static int random = 0;
     private boolean check = false;
     int length_row_number = 0;
@@ -45,7 +43,6 @@ public class DataPumpProcess {
     public static int indexOfField;
     public static int rowNum;
     public static int[] count = new int[4];
-    public static int[] count2 = new int[4];
 
     public DataPumpProcess(final String field_name, final String row_num, final int row_number,
             final String dtp_file_name) {
@@ -148,7 +145,6 @@ public class DataPumpProcess {
             final DataPumping dataPumping = new DataPumping();
             random = 0;
             createLine = new ArrayList<>();
-            aBoolean = false;
             for (final String field_argument : field_arg_name) {
                 check = false;
 
