@@ -17,7 +17,8 @@ public class DataPumpWriter {
         int average = field_arg_name.size() / 2;
         PrintWriter p = null;
         String partFile = prop.getProperty("part.OutputCSV");
-        String fileName = dtp_file_name + "_19990101" + new Date().getTime();
+        String fileName = dtp_file_name + "_19990101" + new Date().getHours() + "" + new Date().getMinutes() + "" + new Date().getSeconds();
+ 
 
         try {
             p = new PrintWriter(new FileWriter(partFile + fileName + ".csv", false));
